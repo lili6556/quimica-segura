@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado da Análise</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+        :root {
+            --bg-deep:    #050d1a;
+            --bg-card:    rgba(255,255,255,0.04);
+            --border:     rgba(0,212,255,0.14);
+            --border-h:   rgba(0,212,255,0.4);
+            --cyan:       #00d4ff;
+            --green:      #00ff9d;
+            --amber:      #ffb800;
+            --red:        #ff5c6e;
+            --text-main:  #e8f4fd;
+            --text-muted: #7ba3c0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, sans-serif;
+            padding: 40px 24px;
+        }
+
+        /* Ambient glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ── Header ── */
+        .titulo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--cyan);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .eyebrow-line {
+            display: inline-block;
+            width: 28px;
+            height: 1px;
+            background: var(--cyan);
+        }
+
+        .titulo h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .titulo h1 strong {
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .titulo p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-top: 8px;
+        }
+
+        /* ── Main grid ── */
+        .resultado {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* ── Product image card ── */
+        .imagem-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(14px);
+            position: sticky;
+            top: 24px;
+        }
+
+        .imagem-card img {
+            width: 100%;
+            border-radius: 14px;
+            display: block;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .produto-label {
+            display: inline-block;
+            margin-top: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .ia-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.2);
+            color: var(--cyan);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        /* ── Info cards ── */
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px 22px;
+            backdrop-filter: blur(14px);
+            transition: border-color 0.3s, transform 0.25s;
+        }
+
+        .card:hover {
+            border-color: var(--border-h);
+            transform: translateX(4px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .card-icon {
+            font-size: 1.15rem;
+            line-height: 1;
+        }
+
+        .card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Accent colors per card type */
+        .card.categoria h3  { color: var(--cyan); }
+        .card.componentes h3{ color: #a78bfa; }
+        .card.riscos h3     { color: var(--red); }
+        .card.armazenamento h3 { color: var(--amber); }
+        .card.descarte h3   { color: var(--green); }
+        .card.ambiental h3  { color: #34d399; }
+
+        .card.riscos      { border-color: rgba(255,92,110,0.18); }
+        .card.descarte    { border-color: rgba(0,255,157,0.14); }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        /* ── Back button ── */
+        .voltar {
+            margin-top: 36px;
+            text-align: center;
+        }
+
+        .voltar a {
+            text-decoration: none;
+        }
+
+        .voltar button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--green), #00c97a);
+            color: #050d1a;
+            padding: 16px 36px;
+            border-radius: 13px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: transform 0.25s, box-shadow 0.25s;
+            box-shadow: 0 0 24px rgba(0,255,157,0.2);
+        }
+
+        .voltar button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(0,255,157,0.35);
+        }
+
+        @media (max-width: 860px) {
+            .resultado {
+                grid-template-columns: 1fr;
+            }
+            .imagem-card {
+                position: static;
+                max-width: 380px;
+                margin: 0 auto;
+            }
+            .card:hover { transform: none; }
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="titulo">
+        <div class="eyebrow">
+            <span class="eyebrow-line"></span>
+            Análise concluída
+            <span class="eyebrow-line"></span>
+        </div>
+        <h1>Resultado da <strong>Análise</strong></h1>
+        <p>Informações geradas por Inteligência Artificial</p>
+    </div>
+
+    <div class="resultado">
+
+        <div class="imagem-card">
+            <img src="{{ url_for('static', filename='uploads/' + imagem) }}">
+            <span class="produto-label">{{ dados.produto }}</span><br>
+            <span class="ia-tag">✦ Identificado por IA</span>
+        </div>
+
+        <div class="info">
+
+            <div class="card categoria">
+                <div class="card-header">
+                    <span class="card-icon">📦</span>
+                    <h3>Categoria</h3>
+                </div>
+                <p>{{ dados.categoria }}</p>
+            </div>
+
+            <div class="card componentes">
+                <div class="card-header">
+                    <span class="card-icon">🧪</span>
+                    <h3>Componentes</h3>
+                </div>
+                <p>{{ dados.componentes }}</p>
+            </div>
+
+            <div class="card riscos">
+                <div class="card-header">
+                    <span class="card-icon">⚠️</span>
+                    <h3>Riscos</h3>
+                </div>
+                <p>{{ dados.riscos }}</p>
+            </div>
+
+            <div class="card armazenamento">
+                <div class="card-header">
+                    <span class="card-icon">🏷️</span>
+                    <h3>Armazenamento</h3>
+                </div>
+                <p>{{ dados.armazenamento }}</p>
+            </div>
+
+            <div class="card descarte">
+                <div class="card-header">
+                    <span class="card-icon">♻️</span>
+                    <h3>Descarte</h3>
+                </div>
+                <p>{{ dados.descarte }}</p>
+            </div>
+
+            <div class="card ambiental">
+                <div class="card-header">
+                    <span class="card-icon">🌎</span>
+                    <h3>Impacto Ambiental</h3>
+                </div>
+                <p>{{ dados.impacto_ambiental }}</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="voltar">
+        <a href="/camera">
+            <button>📸 Nova Análise</button>
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
