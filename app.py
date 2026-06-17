@@ -6,6 +6,7 @@ from utils.gemini import analisar_produto
 
 app = Flask(__name__)
 
+app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 UPLOAD_FOLDER = "static/uploads"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -29,8 +30,10 @@ def salvar_imagem():
         return "Nenhuma imagem recebida"
 
     imagem_base64 = imagem_base64.split(",")[1]
-
-    nome_arquivo = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+    if len(imagem_base64) > 15_000_000:
+        return "Imagem muito grande. Tente novamente."
+    
+    nome_arquivo = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.jpg"
 
     caminho = os.path.join(
         UPLOAD_FOLDER,
