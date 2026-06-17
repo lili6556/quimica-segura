@@ -24,7 +24,7 @@ document
 
         ctx.drawImage(video, 0, 0);
 
-        const imagemData = canvas.toDataURL("image/png");
+        const imagemData = canvas.toDataURL("image/jpeg", 0.5);
 
         document.getElementById("imagem").value = imagemData;
 
