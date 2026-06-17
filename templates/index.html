@@ -27,16 +27,22 @@
         }
 
         body {
-            min-height: 100vh;
-            background: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Inter', system-ui, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
+    min-height: 100vh;
+    background: var(--bg-deep);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+
+    /* ALTERAR */
+    align-items: flex-start;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    position: relative;
+    padding: 30px 0;
+}
 
         /* ── Molecular background ── */
         canvas#mol {
